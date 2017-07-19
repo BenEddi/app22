@@ -1,0 +1,47 @@
+<header class="header">
+  <div class="container">
+    <h1 class="page-header">
+      Veille App Statistics<br />
+      <small>générée en temps réel </small>
+    </h1>
+  </div>
+</header>
+
+<div class="primary">
+  <div class="container">
+
+        <h2>Statistiques</h2>
+        
+        <p>Ces Statistiques montrent le nombre d'Instances, d'Alertes et Mentions</p>
+
+        <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="statistic">
+                        <div class="value">{{ totalInsts }}</div>
+                        <div class="label">Instances</div>
+                    </div><!-- /.statistic -->
+                </div><!-- /.col -->
+
+                <div class="col-sm-6">
+                    <div class="statistic">
+                        <div class="value">{{ totalAlerts }}</div>
+                        <div class="label">Alertes</div>
+                    </div><!-- /.statistic -->
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <div class="statistic">
+                        <div class="value">{{ totalMts }}</div>
+                        <div class="label">Mentions</div>
+                    </div><!-- /.statistic -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+
+
+
+        </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+
+  </div> 
+</div>

@@ -1,0 +1,245 @@
+<div class="form-inline">
+  <menu (myEvent) = "anotherfunct($event)"></menu>
+</div>
+
+<div class="main-content">
+
+  <div class="container">
+    <form  class="form-inline" #SourceForm="ngForm" [hidden]="!selectedAlert">
+          <div class="form-group">
+            <i class="fa fa-facebook-official fa-fw" style="color:#3b5998" aria-hidden="true"></i> 
+            <label for="Facebook">Facebook</label>
+            <input  type= "radio" class="form-control" name="smedia"  [(ngModel)]="smedia1" value="facebook.com" (ngModelChange)="changeSrc($event)"> 
+          </div>
+          <div class="form-group">
+            <i class="fa fa-twitter fa-fw"  style="color:#00aced" aria-hidden="true"></i>
+            <label for="Twitter">Twitter</label>
+            <input  type= "radio" class="form-control" name="smedia"  [(ngModel)]="smedia2" value="twitter.com"(ngModelChange)="changeSrc($event)">
+          </div>
+          <div class="form-group">
+            <i class="fa fa-youtube-play fa-fw" style="color:#e52d27" aria-hidden="true"></i>
+            <label for="Youtube">Youtube</label>
+            <input  type= "radio" class="form-control" name="smedia" [(ngModel)]="smedia3" value="youtube.com"(ngModelChange)="changeSrc($event)">
+          </div>
+          <div class="form-group">
+            <i class="fa fa-instagram fa-fw" style="color:#cd486b" aria-hidden="true"></i>
+            <label for="Instagram">Instagram</label>
+            <input  type= "radio"  class="form-control" name="smedia" [(ngModel)]="smedia4" value="instagram.com"(ngModelChange)="changeSrc($event)">
+          </div>    
+    </form>
+  </div>  
+  <!--<button (click)="getMts()"> Test a faire </button>-->
+  <!--  Select panel -->
+  <div *ngIf="iSource" class="form-group">
+        <label for="actions">Classement par popularité </label>
+        <select class="form-control" id="pop" name="pop" [(ngModel)]="selectedType"  (ngModelChange)="onChange($event)"  >
+            <option value="Likes" >Likes</option>
+            <option value="Cmts"> Comments</option>
+            <option value="shares">Shares ou retweets</option>
+        </select>
+  </div>
+      
+    
+  <!--  END Select panel -->
+  <div class="row">
+      <div class="col-md-3"><button class="btn btn-default" (click)="rankByDate()"  [disabled]="iSource">By Date</button></div>
+      <div class="col-md-3"><button class="btn btn-primary" (click)="getMts()">Refresh</button></div>
+      <div class="col-md-3">
+          <input class="form-control" type="text" [(ngModel)]="term" placeholder="Rechercher par mot">
+      </div>
+  </div>
+
+  <div class="panel panel-info" [hidden]="!selectedAlert">
+        
+      <div class="panel-heading">
+        <h2 class="panel-title"><span class="fa fa-rss" aria-hidden="true"></span> My Mentions</h2>
+      </div>
+
+  <!--  By Default  -->
+    <div class="panel-body" [hidden]="isDate" [hidden]="iSource">
+      <ul class="list-group">
+        <li *ngFor="let mention of (pagedItems |filter:term )"  class="list-group-item" >
+                <div class="media">
+                  <div class="media-left ">
+                    <a target="_blank" href="{{mention.link}}" >
+                      <img [src]="mention.link_img"  width="240" height="240" class="thumbnail" />
+                    </a>
+                  </div>
+              
+                  <div class="media-body">
+                    <h4 class="media-heading">{{mention.text}}</h4>    
+                    <div class="list-group-item-info">
+                        <span>{{ mention.date_creation  }}</span>
+                        <span>Likes: {{mention.likes_count }}</span> -
+                        <span>Commentaires: {{mention.comts_count }}</span> -
+                        <span>Partages : {{mention.shares_count }}</span>
+                        <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                    </div>
+                    <hr  width="550px">
+                    <ops [mentionTosend]="mention" [alerTosend]="alertIn" ></ops>
+                  </div>
+                    
+              </div> 
+        </li>
+      </ul>  
+    </div>
+
+    <!-- By Date -->
+    <div class="panel-body" *ngIf="isDate" [hidden]="iSource">
+      <h3 class="panel-title">By Date</h3>
+      <ul class="list-group">
+        <li *ngFor="let mention of pagedItems | datePipe: '-date_creation' |filter:term"  class="list-group-item">
+                <div class="media">
+                    <div class="media-left ">
+                      <a target="_blank" href="{{mention.link}}" >
+                        <img width="240" height="240" class="thumbnail" src="{{mention.link_img}}" />
+                      </a>
+                    </div>
+                
+                    <div class="media-body">
+                      <h4 class="media-heading">{{mention.text}}</h4>    
+                      <div class="list-group-item-info">
+                          <span>{{ mention.date_creation  }}</span>
+                          <span>Likes: {{mention.likes_count }}</span> -
+                          <span>Commentaires: {{mention.comts_count }}</span> -
+                          <span>Partages : {{mention.shares_count }}</span>
+                          <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                      </div>
+                    </div>
+              </div> 
+      
+        </li>
+      </ul>  
+    </div>
+
+
+    <!--  Choice Like or cmts or shares  -->
+
+        <div *ngIf="choice" [ngSwitch]="choice">
+            <ng-container *ngSwitchCase="'Likes'">
+              <h3 class="panel-title">Par Likes</h3>
+              <ul class="list-group">
+                <li *ngFor="let mention of (srcMentions | likes |filter:term)" class="list-group-item">
+                    <div class="media">
+                            <div class="media-left ">
+                              <a target="_blank" href="{{mention.link}}" >
+                                <img width="240" height="240" class="thumbnail"  src="{{mention.link_img}}" />
+                              </a>
+                            </div>
+                        
+                            <div class="media-body">
+                              <h4 class="media-heading">{{mention.text}}</h4>    
+                              <div class="list-group-item-info">
+                                  <span>{{ mention.date_creation }}</span>
+                                  <span>Likes: {{mention.likes_count }}</span> -
+                                  <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                              </div>
+                            </div>
+                      </div> 
+                </li>
+              </ul>   
+            </ng-container>
+            <ng-container *ngSwitchCase="'Cmts'">
+                <h3 class="panel-title">Par Commentaires</h3>
+                <ul class="list-group">
+                    <li *ngFor="let mention of (srcMentions | cmts |filter:term)" class="list-group-item" >
+                          <div class="media">
+                              <div class="media-left ">
+                                <a target="_blank" href="{{mention.link}}" >
+                                  <img width="240" height="240" class="thumbnail"  src="{{mention.link_img}}" />
+                                </a>
+                              </div>
+                        
+                              <div class="media-body">
+                                <h4 class="media-heading">{{mention.text}}</h4>    
+                                <div class="list-group-item-info">
+                                    <span>{{ mention.date_creation  }}</span>
+                                    <span>Commentaires: {{mention.comts_count }}</span> -                     
+                                    <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                                </div>
+                              </div>
+                          </div> 
+              
+                  </li>
+                </ul>   
+            </ng-container>
+            <ng-container *ngSwitchCase="'shares'">
+                  <h3 class="panel-title">Par Partage ou retweets</h3>
+              <ul class="list-group">
+                <li *ngFor="let mention of (srcMentions | shares |filter:term)"  class="list-group-item">
+                    <div class="media">
+                              <div class="media-left ">
+                                <a target="_blank" href="{{mention.link}}" >
+                                  <img width="240" height="240" class="thumbnail"  src="{{mention.link_img}}" />
+                                </a>
+                              </div>
+                              <div class="media-body">
+                                <h4 class="media-heading">{{mention.text}}</h4>    
+                                <div class="list-group-item-info">
+                                    <span>{{ mention.date_creation  }}</span>
+                                    <span> Partages: {{mention.shares_count }}</span> -                     
+                                    <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                                </div>
+                              </div>
+                          </div> 
+              
+                </li>
+              </ul>   
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div class="panel-body">
+                    <ul class="list-group">
+                      <li *ngFor="let mention of srcMentions" class="list-group-item">
+                        <div class="media">
+                              <div class="media-left ">
+                                <a target="_blank" href="{{mention.link}}" >
+                                  <img width="240" height="240" class="thumbnail"  src="{{mention.link_img}}" />
+                                </a>
+                              </div>
+                              <div class="media-body">
+                                <h4 class="media-heading">{{mention.text}}</h4>    
+                                <div class="list-group-item-info">
+                                    <span>{{ mention.date_creation  }}</span>
+                                    <span>Nombre de Likes : {{mention.comts_count }}</span> -                     
+                                    <a target="_blank" href="{{mention.link}}" >l'Id : {{ mention.ids}}</a> 
+                                </div>
+                              </div>
+                          </div> 
+              
+                      </li>
+                    </ul>   
+                </div>
+            </ng-container>
+      
+      </div>
+
+  <!-- pager -->
+          <span [hidden]="iSource">
+              <ul *ngIf="pager.pages && pager.pages.length"  class="pagination">
+                  <li [ngClass]="{disabled:pager.currentPage === 1}">
+                      <a (click)="setPage(1)">First</a>
+                  </li>
+                  <li [ngClass]="{disabled:pager.currentPage === 1}">
+                      <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                  </li>
+                  <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                      <a (click)="setPage(page)">{{page}}</a>
+                  </li>
+                  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                      <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                  </li>
+                  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                      <a (click)="setPage(pager.totalPages)">Last</a>
+                  </li>
+              </ul>
+          </span>  
+
+
+
+
+
+  </div>
+</div> 
+
+
+         

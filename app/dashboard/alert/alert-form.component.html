@@ -1,0 +1,196 @@
+<!--<a [routerLink]="['../dialog']">GO TO Auto complete</a>-->
+<div *ngIf="isLoading">
+   <md-progress-bar mode="indeterminate"></md-progress-bar>
+    <img src="./assets/img/loading.gif" />
+     <font color="#3f51b5" size="8"> <span>Bringing the world to you ;) </span> </font>
+      
+    
+</div>   
+
+<div class="container-fluid" *ngIf="!isLoading">
+  <div class="main-content">
+    
+     <div class="row"> 
+     <div  [hidden]="submitted">
+          <div class="col-xs-12 col-md-8">
+             
+                    
+              <form [formGroup]="alert" (ngSubmit)="onSubmit()"novalidate >    
+                 <div class="card">
+                  <h1>Créer Alert</h1>
+                      <md-tab-group>
+                          <md-tab label="Google Tab">
+                                  <div class="content">
+                                    <div class="row">
+                                      <div class="col-md-3"> 
+                                          <div class="form-group">
+                                            <label for="descA">Name of alert</label>
+                                            <input type="text" class="form-control" 
+                                            required  formControlName="descA">
+                                            <!--TODO: remove this: {{model.descA}}-->
+                                          </div>
+                                      </div>
+                                    </div>
+                                  
+                                        <div class="form-inline">
+                                              <div class="form-group">
+                                                  <label for="descI"> Instance de l'alert</label>
+                                                  <select class="form-control"  formControlName="descI">
+                                                    <option *ngFor="let instance of instances" [value]="instance.descI" >{{instance.descI}}</option>
+                                                  </select>
+                                              </div>
+                                              <div class="form-group">   
+                                                  <button  type="button" class="btn btn-default" (click)="openCustom()">Nouvelle Instance</button>
+                                              </div>
+                                      </div>
+                                      
+                                    
+                                    <div class="row">  
+                                          <div class="col-md-3">
+                                            <div class="form-group">
+                                              <label for="optKeywords"> Mots cles Optionnels</label>
+                                              <input type="text" class="form-control"  formControlName="optKeywords">
+                                            </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                <label for="forbidenKeywords"> Mots cles Interdites</label>
+                                                <input type="text" class="form-control"  formControlName="forbidenKeywords">
+                                              </div>
+                                          </div>
+                                    </div> 
+                                    <div class="row">  
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                <label for="srcAutorises"> Sources Autorisées </label>
+                                                <input type="text" class="form-control"  formControlName="srcAutorises">
+                                              </div>
+                                          </div>
+                                          <div class="col-md-3">  
+                                              <div class="form-group">
+                                                <label for="srcBloques"> Sources bloquées </label>
+                                                <input type="text" class="form-control" formControlName="srcBloques">
+                                              </div>
+                                          </div>
+                                    </div>
+                                    <div class="row">    
+                                      <div class="col-md-2">  
+                                          <div class="form-group">
+                                            <label for="langue"> Langue  </label>
+                                            <input type="text" class="form-control" formControlName="langue">
+                                          </div>
+                                      </div>
+                                    </div>   
+                              
+                          </div>   
+                        </md-tab><!-- end of Google Tab-->
+                    
+                  
+                      <md-tab label="Twitter tab">
+                          <div class="content">
+                                     
+                                      <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                  <label for="srcAutorises"> Sources Autorisées pour Twitter </label>
+                                                  <input type="text" class="form-control example-tooltip-host"  formControlName="srcAutorisesTw"
+                                                  mdTooltip="Séparer les sources par des - " [mdTooltipPosition]="'before'">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">  
+                                                <div class="form-group">
+                                                  <label for="srcBloques"> Sources bloquées pour Twitter</label>
+                                                  <input type="text" class="form-control example-tooltip-host" formControlName="srcBloquesTw"
+                                                  mdTooltip="Séparer les sources par des - " [mdTooltipPosition]="'right'">
+                                                </div>
+                                            </div>
+                                      </div>
+                                      <div class="row">
+                                        <dialog-overview-example ></dialog-overview-example>
+                                      </div>
+                                    
+                          </div>   
+
+                      </md-tab>
+                    <md-tab label="Facebook tab">
+                      <md-input-container class="example-full-width">
+                        <input mdInput placeholder="Page Facebook" [mdAutocomplete]="auto"  [(ngModel)]="nameOfPage" [ngModelOptions]="{standalone: true}"  (keyup)=filter() >
+                        
+                      </md-input-container>
+                       
+                       
+                      <md-autocomplete #auto="mdAutocomplete">
+                        <md-option *ngFor="let page of filteredList " [value]="page" (click)=doItOption(page) >
+                          {{ page }}
+                        </md-option>
+                      </md-autocomplete>
+                      <span *ngFor="let name of alert.value.fbPage"  > {{name}}  <span  (click)="deletePage(index)" >x</span> | </span>
+                    </md-tab>
+
+                         
+                  </md-tab-group>
+                    
+                    </div>
+                   <div class="row">   
+                              <button type="submit" class="btn btn-info btn-fill pull-right" (click)="onEvent($event)">Submit</button>
+                              <div class="clearfix"></div>
+                    </div>  
+                </form>
+                  
+                 
+       </div> 
+     </div> 
+    </div>  
+   
+
+   <div  [hidden]="!submitted">
+          <div class="container-fluid">
+              <div class="card">
+                  <notifications-cmp [notifTosend]="goodNotif" [badNotifToSend]="badNotif"></notifications-cmp>
+                      <h2>You submitted the following:</h2>
+                      <div class="row">
+                        <div class="col-xs-3">Name of Alert</div>
+                        <div class="col-xs-9  pull-left">{{ alert.get('descA').value }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3">Mots cle Optionnels</div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('optKeywords').value  }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3">Mots cle Interdites</div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('forbidenKeywords').value  }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3">Sources Autorisées</div>
+                        <div class="col-xs-9 pull-left">{{alert.get('srcAutorises').value  }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3"> Source bloques</div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('srcBloques').value }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3"> Langue </div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('langue').value }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3"> Sources Autorisées pour Twitter </div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('srcAutorisesTw').value }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-3"> Sources bloquées pour Twitter </div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('srcBloquesTw').value }}</div>
+                      </div>
+                       <div class="row">
+                        <div class="col-xs-3"> Page Facebook choisie </div>
+                        <div class="col-xs-9 pull-left">{{ alert.get('fbPage').value }}</div>
+                      </div>
+                      <br>
+                      <button class="btn btn-primary" (click)="submitted=false">Edit</button>
+                
+              </div>
+          </div>      
+      </div>
+  
+    </div> 
+</div> 
+

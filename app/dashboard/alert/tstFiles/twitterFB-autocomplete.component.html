@@ -1,0 +1,28 @@
+
+<h2>Twitter Form</h2>
+
+<form [formGroup]="user" (ngSubmit)="onSubmit(user)" novalidate>
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control" formControlName="name">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="center-block">Pass:
+      <input class="form-control" formControlName="pass">
+    </label>
+  </div>
+<input type="submit" value="submit">
+
+</form>
+{{ user.value | json }}
+<!--<md-input-container>
+  <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
+</md-input-container>
+
+<md-autocomplete #auto="mdAutocomplete">
+  <md-option *ngFor="let state of filteredStates | async" [value]="state">
+    {{ state }}
+  </md-option>
+</md-autocomplete>-->

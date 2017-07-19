@@ -1,0 +1,31 @@
+<!-- Large button group -->
+<div class="btn-group">
+  <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Vos Alertes  <span class="caret"></span>
+  </button>
+  <ul  #selectedPage class="dropdown-menu" [hidden]="!exist">
+    <li><button  class="form-control btn btn-default" *ngFor="let page of alerts" (click)="onSelect(page.descA)">
+      {{page.descA}}</button></li>
+  </ul>
+</div>
+
+
+<!--<div class="form-group">
+  <form  #alertsForm="ngForm">
+  <select #selectedPage  class="form-control" name="selectedAlert" [ngModel]="selectedAlert" [hidden]="!exist">
+    <option   *ngFor="let page of alerts" value="{{ page.descA }}" (click)="onSelect($event)" >{{ page.descA }}</option> 
+  </select>
+  </form>
+</div>-->
+
+
+
+<!--<select #selectedPage class="dropdown-menu">
+  <option   *ngFor="let page of pages" [value]="page">{{ page }}</option> 
+</select>
+
+<button (click)="getValueFromSelect(selectedPage.value)">click me</button>
+
+***********
+-->
+

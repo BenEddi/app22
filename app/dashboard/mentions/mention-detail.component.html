@@ -1,0 +1,14 @@
+<div *ngIf="mention">
+  <h2>{{mention.ids}} details!</h2>
+  <div>
+    <label>id: </label>{{mention.ids}}
+    <label>Text: </label>{{mention.text}}
+ </div>
+  <button (click)="goBack()">Back</button>
+</div>
+<!--  <div>
+    <label>name: </label>
+    <input [(ngModel)]="hero.name" placeholder="name" />
+  </div>
+  <button (click)="save()">Save</button>-->
+

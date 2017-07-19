@@ -1,0 +1,18 @@
+    <div *ngIf="side.visible" class="sidebar-wrapper" >
+        <div class="logo">
+            <a target="blanck" href="http://www.crescendo.ma" class="simple-text">
+                <div class="logo-img">
+                    <img src="/assets/img/angular2-logo-white.png"/>
+                </div>
+                Veille App
+            </a>
+        </div>
+        <ul class="nav">
+            <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+                <a  [routerLink]="[menuItem.path]">
+                    <i class="{{menuItem.icon}}"></i>
+                    <p>{{menuItem.title}}</p>
+                </a>
+            </li>
+        </ul>
+    </div>
